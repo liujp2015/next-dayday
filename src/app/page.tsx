@@ -1,8 +1,10 @@
+import Nav from "@/components/Nav";
 import Image from "next/image";
 
 export default function Home() {
   return (
     <>
+      <Nav></Nav>
       {/** 最外层容器设置背景颜色*/}
       <div className=" bg-gray-400 pt-20">
         {/** 内层容器*/}
