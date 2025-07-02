@@ -6,6 +6,7 @@ import React, { startTransition, useActionState } from "react";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import SignButton from "@/components/sign-button";
 
 const signInSchema = z.object({
   name: z.string().min(6, "最小长度为6").max(10, "最大程度为10"),
