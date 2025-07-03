@@ -1,6 +1,8 @@
 import GitHub from "next-auth/providers/github";
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { prisma } from "./prisma";
+import bcrypt from "bcryptjs";
 
 // Notice this is only an object, not a full Auth.js instance
 export default {
@@ -10,22 +12,28 @@ export default {
       // 自定义名称，将在登录页显示
       name: "Credentials",
       credentials: {
-        email: { label: "Email", type: "text" },
+        email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials, req) {
-        // 这里添加你的验证逻辑
-        const user = await validateUser(
-          credentials.email,
-          credentials.password
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error("Missing credentials");
+        }
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email as string },
+        });
+
+        if (!user) return null;
+
+        // 验证密码
+        const isValid = await bcrypt.compare(
+          credentials.password as string,
+          user.password
         );
 
-        if (user) {
-          // 返回的对象将保存在JWT中
-          return user;
-        } else {
-          return null;
-        }
+        if (!isValid) return null;
+
+        return user;
       },
     }),
   ], // 确保调用为 Provider 实例
