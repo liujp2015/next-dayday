@@ -1,15 +1,9 @@
-import Nav from "@/components/Nav";
-import { Button } from "@/components/ui/button";
+import Nav from "@/components/nav";
 import Image from "next/image";
 
 export default function Home() {
   return (
     <>
-      <div className="bg-red-500">12345</div>
-      <div className="bg-red-500 p-8 text-white">
-        Tailwind 测试（如果显示红底白字，则生效）
-      </div>
-      <Button variant="default">shadcn 按钮</Button>
       <Nav></Nav>
       {/** 最外层容器设置背景颜色*/}
       <div className=" bg-gray-400 pt-20">
