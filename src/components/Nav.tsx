@@ -19,7 +19,7 @@ export default function Nav() {
         />
         <span className="ml-2 text-xl font-bold  lg:block">天天朋友圈</span>
       </a>
-      <div className="flex gap-20 items-center">
+      <div className="flex gap-10 items-center ">
         <Link href="/" className="hidden lg:block">
           主页
         </Link>
