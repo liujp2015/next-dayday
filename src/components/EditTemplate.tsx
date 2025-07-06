@@ -86,6 +86,14 @@ export default function EditTemplate() {
           </div>
         </div>
       </div>
+
+      <div className="w-full">
+        <div className="w-full h-screen">
+          <div className="pt-2 px-2">
+            <input className="w-full" value={123} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
