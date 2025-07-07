@@ -85,8 +85,8 @@ model item {
    id           String   @id @default(cuid())
    source Json   // 必填的 JSON 字段
    table String  //类型 
-   title String
-   tags  String
+   title String?
+   tags  String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
