@@ -1,17 +1,71 @@
 "use client";
+import { getTemplateList } from "@/actions/item";
 import clsx from "clsx";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import { Input } from "./ui/input";
+import { Search, SearchIcon } from "lucide-react"; // 或其他 Lucide 图标
 
-const getTemplateList = async () => {
-  const res = await fetch("http://localhost:3000/api/templates");
-  const data = await res.json();
-  return data;
+const templateList = async () => {
+  const res = await getTemplateList();
+  console.log(res.data);
+  return res;
 };
 
 export default function EditTemplate() {
+  const [templateQueryModel, setTemplateQueryModel] = useState<string>("");
+  const [templateQueryLoading, setTemplateQueryLoading] =
+    useState<boolean>(false);
+  const [templateQueryState, setTemplateQueryState] = useState({
+    meta: { limit: 10, next: 0, hasNext: true },
+    active: "input",
+  });
+
+  const [templateList, setTemplateList] = useState([]);
   const [switchTab, setSwitthTab] = useState<string>("");
 
+  const templateScrollContainer = useRef<HTMLDivElement>(null);
+
+  // 预制模板的搜索：关键字查询
+  const templateQuerySelect = async (initFlag: boolean = false) => {
+    if (templateQueryLoading!) return false;
+    if (!templateQueryState.meta.hasNext) return false;
+
+    // 重置搜索内容
+    if (initFlag) {
+      templateQueryState.meta = { limit: 10, next: 0, hasNext: true };
+      setTemplateList([]);
+    }
+
+    const params = {
+      limit: templateQueryState.meta.limit,
+      next: templateQueryState.meta.next,
+    };
+    // params["input"] = templateQueryModel;
+    // setTemplateQueryLoading(true);
+
+    // const result = await axios.get(`/api/item/template`, { params });
+    // if (result.status == 200 && result.data.data) {
+    //   templateList.value = templateList.value.concat(result.data.data);
+    //   templateQueryState.meta = result.data.meta;
+    // }
+    setTemplateQueryLoading(false);
+  };
+
+  const templateScroll = async () => {
+    // const scrollHeight = templateScrollContainer.current?.scrollHeight;
+    // const clientHeight = templateScrollContainer.current?.clientHeight;
+    // const scrollTop = templateScrollContainer.current?.scrollTop;
+    // if (scrollHeight - (scrollTop + clientHeight) <= 1) {
+    // }
+    const templateScrollContainerCurrent = templateScrollContainer.current;
+    if (!templateScrollContainerCurrent) return;
+    const { scrollHeight, clientHeight, scrollTop } =
+      templateScrollContainerCurrent;
+    if (scrollHeight - (scrollTop + clientHeight) <= 1) {
+      templateQuerySelect();
+    }
+  };
   return (
     <div className="w-full flex h-screen border-r">
       <div className="w-24 border-r ">
@@ -90,7 +144,25 @@ export default function EditTemplate() {
       <div className="w-full">
         <div className="w-full h-screen">
           <div className="pt-2 px-2">
-            <input className="w-full" value={123} />
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                className=" focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 pl-8"
+                type="email"
+                placeholder="Email"
+                value={templateQueryModel}
+                onChange={(e) => setTemplateQueryModel(e.target.value)}
+              />
+            </div>
+          </div>
+          <div
+            className="w-full h-[calc(100%-44px)] flex "
+            ref={templateScrollContainer}
+            onScroll={templateScroll}
+          >
+            <div>
+              <img></img>
+            </div>
           </div>
         </div>
       </div>

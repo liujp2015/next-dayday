@@ -25,3 +25,11 @@ export async function getItemsByTags(
     },
   });
 }
+
+export async function getTemplateList() {
+  const items = await prisma.item.findMany();
+  return {
+    message: "Success",
+    data: items, // 返回数据和状态
+  };
+}
